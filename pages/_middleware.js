@@ -11,5 +11,15 @@ export default async function middleware(req) {
             return
         }
         return NextResponse.redirect(`http://${domain}/login`)
+    }else{
+        if(req.page.name=='/login'||req.page.name=='/register'){
+            return NextResponse.redirect(`http://${domain}/`)
+        }
+        const verifyToken = await jwt.verify(req.cookies._token, process.env.JWT_SECRET_KEY)
+        if(verifyToken){
+            return
+        }else{
+            return NextResponse.redirect(`http://${domain}/api/auth/clearcookies`)
+        }
     }
 }
